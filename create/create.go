@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 
 	null "gopkg.in/guregu/null.v3"
@@ -14,20 +15,26 @@ type CreateBookRequest struct {
 	Language    null.String `json:"language"`
 }
 
-// NewCreateBookRequestFromJSONString
-func NewCreateBookRequestFromJSONString() (CreateBookRequest, error) {
+// NewCreateBookRequestFromJSONString tries to create a new CreateBookRequest from a given JSON string
+func NewCreateBookRequestFromJSONString(jsonString string) (*CreateBookRequest, error) {
+	request := new(CreateBookRequest)
 
+	if err := json.Unmarshal([]byte(jsonString), request); err != nil {
+		return nil, errors.New("Failed to parse JSON string into CreateBookRequest")
+	}
+
+	return request, nil
 }
 
 // Validate checks struct for errors
 func (request *CreateBookRequest) Validate() error {
 	errorString := ""
 
-	if !request.Title.Valid || request.Title.Value == "" {
+	if !request.Title.Valid || request.Title.String == "" {
 		errorString = "Title cannot be null nor empty"
 	}
 
-	if !request.Description.Valid || request.Description.Value == "" {
+	if !request.Description.Valid || request.Description.String == "" {
 		if errorString != "" {
 			errorString += "; "
 		}
@@ -35,7 +42,7 @@ func (request *CreateBookRequest) Validate() error {
 		errorString += "Description cannot be null nor empty"
 	}
 
-	if !request.ISBN.Valid || request.ISBN.Value == "" {
+	if !request.ISBN.Valid || request.ISBN.String == "" {
 		if errorString != "" {
 			errorString += "; "
 		}
@@ -43,7 +50,7 @@ func (request *CreateBookRequest) Validate() error {
 		errorString += "ISBN cannot be null nor empty"
 	}
 
-	if !request.Language.Valid || request.Language.Value == "" {
+	if !request.Language.Valid || request.Language.String == "" {
 		if errorString != "" {
 			errorString += "; "
 		}
