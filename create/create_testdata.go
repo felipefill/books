@@ -1,6 +1,11 @@
 package main
 
-import null "gopkg.in/guregu/null.v3"
+import (
+	"database/sql"
+
+	"github.com/felipefill/books/model"
+	null "gopkg.in/guregu/null.v3"
+)
 
 var validCreateBookRequestAsJSONString = `{
 "title": "Book title example",
@@ -14,4 +19,18 @@ var validCreateBookRequest = CreateBookRequest{
 	Description: null.StringFrom("Book description example"),
 	ISBN:        null.StringFrom("9781617293290"),
 	Language:    null.StringFrom("BR"),
+}
+
+var invalidCreateBookRequest = CreateBookRequest{
+	Title:       null.StringFrom(""),
+	Description: null.String{},
+	ISBN:        null.StringFrom("9781617293290"),
+	Language:    null.StringFrom("BR"),
+}
+
+var sampleBook = model.Book{
+	Title:       "Book title example",
+	Description: "Book description example",
+	ISBN:        sql.NullString{String: "9781617293290", Valid: true},
+	Language:    "BR",
 }

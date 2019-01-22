@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/felipefill/books/model"
+	"github.com/felipefill/books/utils"
+
 	null "gopkg.in/guregu/null.v3"
 )
 
@@ -26,8 +29,39 @@ func NewCreateBookRequestFromJSONString(jsonString string) (*CreateBookRequest, 
 	return request, nil
 }
 
-// Validate checks struct for errors
-func (request *CreateBookRequest) Validate() error {
+// StoreInDatabase stores request content in database as a new book
+func (request *CreateBookRequest) StoreInDatabase() (*model.Book, error) {
+	book, err := request.ToBook()
+	if err != nil {
+		return nil, err
+	}
+
+	//TODO: should I handle duplicates? how?
+	db := utils.GetDB().Create(book)
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return book, nil
+}
+
+// ToBook converts CreateBookRequest into a Book, runs validation before doing so
+func (request *CreateBookRequest) ToBook() (*model.Book, error) {
+	if err := request.validate(); err != nil {
+		return nil, err
+	}
+
+	book := model.Book{
+		Title:       request.Title.String,
+		Description: request.Description.String,
+		ISBN:        request.ISBN.NullString,
+		Language:    request.Language.String,
+	}
+
+	return &book, nil
+}
+
+func (request *CreateBookRequest) validate() error {
 	errorString := ""
 
 	if !request.Title.Valid || request.Title.String == "" {

@@ -11,4 +11,4 @@ deploy: clean build
 	sls deploy --verbose
 
 test: 
-	go test ./... -cover
+	go test `go list ./... | grep -v model | grep -v utils` -cover
