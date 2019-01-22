@@ -24,3 +24,10 @@ functions:
       - http:
           path: book
           method: post
+  search:
+    handler: bin/search
+    events:
+      - http:
+          path: book/{id}
+          method: get
+
