@@ -10,6 +10,46 @@
   version = "v1.3.0"
 
 [[projects]]
+  digest = "1:439bfb51db599cd80766736b93b3d10e9314361197ada0b1209a51627a00ccd5"
+  name = "github.com/PuerkitoBio/goquery"
+  packages = ["."]
+  pruneopts = ""
+  revision = "2d2796f41742ece03e8086188fa4db16a3a0b458"
+  version = "v1.5.0"
+
+[[projects]]
+  digest = "1:e3726ad6f38f710e84c8dcd0e830014de6eaeea81f28d91ae898afecc078479a"
+  name = "github.com/andybalholm/cascadia"
+  packages = ["."]
+  pruneopts = ""
+  revision = "901648c87902174f774fac311d7f176f8647bdaa"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:0b3216a5a45720bda5483e27d7242b4d26c74176c75d23dafff7e43c5abbe8e4"
+  name = "github.com/antchfx/htmlquery"
+  packages = ["."]
+  pruneopts = ""
+  revision = "db5c1236cbb43c58add1164a8b20d844683e537f"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4fa9a984402f16a3fcb2c3380c696c6045ef3807dcf456a079a201882021b1fd"
+  name = "github.com/antchfx/xmlquery"
+  packages = ["."]
+  pruneopts = ""
+  revision = "355641961c927f5151e1e0ac437a5f8613f5be8b"
+
+[[projects]]
+  branch = "master"
+  digest = "1:378081390d63dd2c2447a3028e4a8334f02a041606e70f719afe74ea813746b1"
+  name = "github.com/antchfx/xpath"
+  packages = ["."]
+  pruneopts = ""
+  revision = "4bbdf6db12aa76808d7b25445919943ed27fdcc0"
+
+[[projects]]
   digest = "1:1c29e45ea5c6fa7e9159bfed0f5b31f10030f536ebc7f87615b93ff5f20c6dfe"
   name = "github.com/aws/aws-lambda-go"
   packages = [
@@ -31,6 +71,43 @@
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:9ab1b1c637d7c8f49e39d8538a650d7eb2137b076790cff69d160823b505964c"
+  name = "github.com/gobwas/glob"
+  packages = [
+    ".",
+    "compiler",
+    "match",
+    "syntax",
+    "syntax/ast",
+    "syntax/lexer",
+    "util/runes",
+    "util/strings",
+  ]
+  pruneopts = ""
+  revision = "5ccd90ef52e1e632236f7326478d4faa74f99438"
+  version = "v0.2.3"
+
+[[projects]]
+  digest = "1:80c5a91ff5613384d720bcc7af9b21d79779f79cc2f49aa3041f6373a8fd3515"
+  name = "github.com/gocolly/colly"
+  packages = [
+    ".",
+    "debug",
+    "storage",
+  ]
+  pruneopts = ""
+  revision = "a3a4941b2de28593f1ccbec83222c29103dfad5e"
+  version = "v1.1.0"
+
+[[projects]]
+  digest = "1:3dd078fda7500c341bc26cfbc6c6a34614f295a2457149fc1045cab767cbcf18"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = ""
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
   digest = "1:7d4958827c8f2d9d31e24d9a3a52194eb179f77d854692e57954c516ecf76748"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -48,6 +125,14 @@
   packages = ["."]
   pruneopts = ""
   revision = "04140366298a54a039076d798123ffa108fff46c"
+
+[[projects]]
+  digest = "1:717859f53ed0a55fab7284704ecaac4b0d292f4caca5ceaa2afd512be49189ea"
+  name = "github.com/kennygrant/sanitize"
+  packages = ["."]
+  pruneopts = ""
+  revision = "06ec0d0dbcd497d01e5189b16f5263f712e61a8e"
+  version = "v1.2.4"
 
 [[projects]]
   digest = "1:29145d7af4adafd72a79df5e41456ac9e232d5a28c1cd4dacf3ff008a217fc10"
@@ -70,12 +155,83 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:d1d064197983378d52b9cb2329f58b050ead44fc541aed670587e0131033f9da"
+  name = "github.com/saintfish/chardet"
+  packages = ["."]
+  pruneopts = ""
+  revision = "3af4cd4741ca4f3eb0c407c034571a6fb0ea529c"
+
+[[projects]]
   digest = "1:381bcbeb112a51493d9d998bbba207a529c73dbb49b3fd789e48c63fac1f192c"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   pruneopts = ""
   revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
   version = "v1.3.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:26a3895530593d2f453fbd7aee1c98fd2f160aba678272e2d7d8c4e428b8ceda"
+  name = "github.com/temoto/robotstxt"
+  packages = ["."]
+  pruneopts = ""
+  revision = "97ee4a9ee6ea01ed0bbf0325dd789f74cac6cb94"
+
+[[projects]]
+  branch = "master"
+  digest = "1:552c5a9b4a2cd4d21efdba35fff561e13f0c666bf4c82fcedbb4e031b704aa61"
+  name = "golang.org/x/net"
+  packages = [
+    "context",
+    "html",
+    "html/atom",
+    "html/charset",
+  ]
+  pruneopts = ""
+  revision = "ed066c81e75eba56dd9bd2139ade88125b855585"
+
+[[projects]]
+  digest = "1:5acd3512b047305d49e8763eef7ba423901e85d5dd2fd1e71778a0ea8de10bd4"
+  name = "golang.org/x/text"
+  packages = [
+    "encoding",
+    "encoding/charmap",
+    "encoding/htmlindex",
+    "encoding/internal",
+    "encoding/internal/identifier",
+    "encoding/japanese",
+    "encoding/korean",
+    "encoding/simplifiedchinese",
+    "encoding/traditionalchinese",
+    "encoding/unicode",
+    "internal/gen",
+    "internal/tag",
+    "internal/utf8internal",
+    "language",
+    "runes",
+    "transform",
+    "unicode/cldr",
+  ]
+  pruneopts = ""
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
+[[projects]]
+  digest = "1:bc09e719c4e2a15d17163f5272d9a3131c45d77542b7fdc53ff518815bc19ab3"
+  name = "google.golang.org/appengine"
+  packages = [
+    "internal",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/remote_api",
+    "internal/urlfetch",
+    "urlfetch",
+  ]
+  pruneopts = ""
+  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:1582dd711e6e5ef92d6245a5dd0646da19d0d0acb94ea615d43896b7b6c6620b"
@@ -92,6 +248,7 @@
     "github.com/DATA-DOG/go-sqlmock",
     "github.com/aws/aws-lambda-go/events",
     "github.com/aws/aws-lambda-go/lambda",
+    "github.com/gocolly/colly",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/stretchr/testify/assert",

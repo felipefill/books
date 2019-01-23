@@ -5,6 +5,7 @@ frameworkVersion: ">=1.28.0 <2.0.0"
 provider:
   name: aws
   runtime: go1.x
+  timeout: 120
   environment:
     DB_USER: ${file(./serverless.env.yml):DB_USER}
     DB_PSWD: ${file(./serverless.env.yml):DB_PSWD}
@@ -30,4 +31,9 @@ functions:
       - http:
           path: book/{id}
           method: get
-
+  crawl:
+    handler: bin/crawl
+    events:
+      - http:
+          path: books
+          method: get
