@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-
 	"github.com/felipefill/books/model"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -31,6 +29,6 @@ var invalidCreateBookRequest = CreateBookRequest{
 var sampleBook = model.Book{
 	Title:       "Book title example",
 	Description: "Book description example",
-	ISBN:        sql.NullString{String: "9781617293290", Valid: true},
+	ISBN:        null.StringFrom("9781617293290"),
 	Language:    "BR",
 }

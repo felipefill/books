@@ -54,7 +54,7 @@ func (request *CreateBookRequest) ToBook() (*model.Book, error) {
 	book := model.Book{
 		Title:       request.Title.String,
 		Description: request.Description.String,
-		ISBN:        request.ISBN.NullString,
+		ISBN:        request.ISBN,
 		Language:    request.Language.String,
 	}
 
