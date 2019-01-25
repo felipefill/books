@@ -51,7 +51,7 @@ func scrapAndStoreBooksThenReturn() (events.APIGatewayProxyResponse, error) {
 	}
 
 	for _, book := range scrappedBooks {
-		if dbc := utils.GetDB().Create(&book); dbc.Error != nil {
+		if err = book.StoreOrRetrieveByTitle(utils.GetDB()); err != nil {
 			return events.APIGatewayProxyResponse{Body: "Something went wrong while storing scrapped books", StatusCode: 500}, nil
 		}
 	}

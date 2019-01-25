@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/felipefill/books/model"
+	"github.com/jinzhu/gorm"
 
 	"github.com/felipefill/books/utils"
 
@@ -19,6 +20,11 @@ func TestCreateBookHandlerHappyPath(t *testing.T) {
 	defer db.Close()
 
 	utils.InjectDB(db)
+
+	mock.
+		ExpectQuery("SELECT (.+) FROM \"books\" (.+)").
+		WithArgs(sampleBook.Title).
+		WillReturnError(gorm.ErrRecordNotFound)
 
 	mock.
 		ExpectQuery("INSERT INTO \"books\" \\(\"isbn\",\"title\",\"description\",\"language\"\\)").
@@ -63,6 +69,11 @@ func TestCreateBookHandlerFailsDatabaseError(t *testing.T) {
 	utils.InjectDB(db)
 
 	mock.
+		ExpectQuery("SELECT (.+) FROM \"books\" (.+)").
+		WithArgs(sampleBook.Title).
+		WillReturnError(gorm.ErrRecordNotFound)
+
+	mock.
 		ExpectQuery("INSERT INTO \"books\" \\(\"isbn\",\"title\",\"description\",\"language\"\\)").
 		WithArgs(sampleBook.ISBN.String, sampleBook.Title, sampleBook.Description, sampleBook.Language).
 		WillReturnError(errors.New("some error"))
@@ -97,6 +108,11 @@ func TestCreateBookRequestStoreInDatabaseFailsDatabaseError(t *testing.T) {
 	utils.InjectDB(db)
 
 	mock.
+		ExpectQuery("SELECT (.+) FROM \"books\" (.+)").
+		WithArgs(sampleBook.Title).
+		WillReturnError(gorm.ErrRecordNotFound)
+
+	mock.
 		ExpectQuery("INSERT INTO \"books\" \\(\"isbn\",\"title\",\"description\",\"language\"\\)").
 		WithArgs(sampleBook.ISBN.String, sampleBook.Title, sampleBook.Description, sampleBook.Language).
 		WillReturnError(errors.New("some database error"))
@@ -119,9 +135,39 @@ func TestCreateBookRequestStoreInDatabaseSucceeds(t *testing.T) {
 	utils.InjectDB(db)
 
 	mock.
+		ExpectQuery("SELECT (.+) FROM \"books\" (.+)").
+		WithArgs(sampleBook.Title).
+		WillReturnError(gorm.ErrRecordNotFound)
+
+	mock.
 		ExpectQuery("INSERT INTO \"books\" \\(\"isbn\",\"title\",\"description\",\"language\"\\)").
 		WithArgs(sampleBook.ISBN.String, sampleBook.Title, sampleBook.Description, sampleBook.Language).
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+	actualBook, actualError := request.StoreInDatabase()
+
+	assert.Equal(t, expectedError, actualError)
+	assert.Equal(t, &expectedBook, actualBook)
+}
+
+func TestCreateBookRequestStoreInDatabaseSucceedsAlreadyInDatabase(t *testing.T) {
+	request := validCreateBookRequest
+
+	expectedBook := sampleBook
+	expectedBook.ID = 1
+
+	var expectedError error
+
+	db, mock, _ := sqlmock.New()
+	utils.InjectDB(db)
+
+	mock.
+		ExpectQuery("SELECT (.+) FROM \"books\" (.+)").
+		WithArgs(sampleBook.Title).
+		WillReturnRows(
+			sqlmock.NewRows([]string{"id", "title", "description", "isbn", "language"}).
+				AddRow(expectedBook.ID, expectedBook.Title, expectedBook.Description, expectedBook.ISBN.String, expectedBook.Language),
+		)
 
 	actualBook, actualError := request.StoreInDatabase()
 

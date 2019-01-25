@@ -36,10 +36,8 @@ func (request *CreateBookRequest) StoreInDatabase() (*model.Book, error) {
 		return nil, err
 	}
 
-	//TODO: should I handle duplicates? how?
-	db := utils.GetDB().Create(book)
-	if db.Error != nil {
-		return nil, db.Error
+	if err = book.StoreOrRetrieveByTitle(utils.GetDB()); err != nil {
+		return nil, err
 	}
 
 	return book, nil
