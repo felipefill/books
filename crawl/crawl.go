@@ -109,18 +109,21 @@ func scrapBooksISBNs(booksElements [][]*colly.HTMLElement) (booksISBNs []string,
 
 func combineBooksElementsAndISBNsIntoBooks(booksElements [][]*colly.HTMLElement, booksISBNs []string) (books []model.Book) {
 	books = make([]model.Book, 0)
+
 	for index, bookElements := range booksElements {
 		currentBook := model.Book{}
 		bookDescription := ""
 
 		for _, element := range bookElements {
 			if element.Name == "h2" {
-				currentBook.Title = element.Text
+				currentBook.Title = strings.TrimSpace(element.Text)
 			}
 
 			if element.Name == "p" {
-				bookDescription += element.Text
+				text := strings.Replace(element.Text, "\n", " ", -1)
+				text = strings.Replace(text, "\t", " ", -1) + " "
 
+				bookDescription += text
 			}
 
 			if element.Name == "div" {
@@ -128,13 +131,8 @@ func combineBooksElementsAndISBNsIntoBooks(booksElements [][]*colly.HTMLElement,
 			}
 		}
 
-		// TODO: This is not working so well, there are some words that are being put together
-		leadAndTrailingWhitespaces := regexp.MustCompile(`^[\s\p{Zs}]+|[\s\p{Zs}]+$`)
-		insideWhitespaces := regexp.MustCompile(`[\s\p{Zs}]{2,}`)
-
-		bookDescription = strings.Replace(bookDescription, "\n", " ", -1)
-		bookDescription = leadAndTrailingWhitespaces.ReplaceAllString(bookDescription, "")
-		bookDescription = insideWhitespaces.ReplaceAllString(bookDescription, "")
+		bookDescription = strings.TrimSpace(bookDescription)
+		bookDescription = regexp.MustCompile(`[\s\p{Zs}]{2,}`).ReplaceAllString(bookDescription, " ")
 
 		currentBook.Description = bookDescription
 		currentBook.ISBN = null.StringFrom(booksISBNs[index])

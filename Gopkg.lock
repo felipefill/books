@@ -180,7 +180,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:552c5a9b4a2cd4d21efdba35fff561e13f0c666bf4c82fcedbb4e031b704aa61"
+  digest = "1:1e9704e5379e68ac473c28aeb3f7e7cd4036ae8a246bf0285b5ebdbb8e0cfacf"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -189,7 +189,7 @@
     "html/charset",
   ]
   pruneopts = ""
-  revision = "ed066c81e75eba56dd9bd2139ade88125b855585"
+  revision = "d26f9f9a57f3fab6a695bec0d84433c2c50f8bbf"
 
 [[projects]]
   digest = "1:5acd3512b047305d49e8763eef7ba423901e85d5dd2fd1e71778a0ea8de10bd4"
