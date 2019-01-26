@@ -13,4 +13,7 @@ deploy: clean build
 	sls deploy --verbose
 
 test: 
+	$(vendor):
+		dep ensure -v
+
 	go test `go list ./... | grep -v utils` -cover
