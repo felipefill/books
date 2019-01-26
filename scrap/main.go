@@ -9,6 +9,8 @@ import (
 	"github.com/felipefill/books/utils"
 )
 
+var kotlinBooksURL = "https://kotlinlang.org/docs/books.html"
+
 // Response is of type APIGatewayProxyResponse since we're leveraging the
 // AWS Lambda Proxy Request functionality (default behavior)
 //
@@ -21,18 +23,18 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	switch workingMode {
 	case ScrapOnly:
-		return scrapBooksAndReturn()
+		return scrapBooksAndReturn(kotlinBooksURL)
 	case ScrapAndStore:
-		return scrapAndStoreBooksThenReturn()
+		return scrapAndStoreBooksThenReturn(kotlinBooksURL)
 	default:
 		return retrieveAllStoredBooks()
 	}
 }
 
-func scrapBooksAndReturn() (events.APIGatewayProxyResponse, error) {
-	scrappedBooks, err := FindKotlinBooks("https://kotlinlang.org/docs/books.html")
+func scrapBooksAndReturn(kotlinBooksURL string) (events.APIGatewayProxyResponse, error) {
+	scrappedBooks, err := FindKotlinBooks(kotlinBooksURL)
 	if err != nil {
-		return events.APIGatewayProxyResponse{Body: "Something went wrong while searching for books", StatusCode: 500}, nil
+		return events.APIGatewayProxyResponse{Body: `{"error": "Something went wrong while searching for books"}`, StatusCode: 500}, nil
 	}
 
 	books := model.Books{
@@ -44,15 +46,15 @@ func scrapBooksAndReturn() (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{Body: string(json), StatusCode: 200}, nil
 }
 
-func scrapAndStoreBooksThenReturn() (events.APIGatewayProxyResponse, error) {
-	scrappedBooks, err := FindKotlinBooks("https://kotlinlang.org/docs/books.html")
+func scrapAndStoreBooksThenReturn(kotlinBooksURL string) (events.APIGatewayProxyResponse, error) {
+	scrappedBooks, err := FindKotlinBooks(kotlinBooksURL)
 	if err != nil {
-		return events.APIGatewayProxyResponse{Body: "Something went wrong while searching for books", StatusCode: 500}, nil
+		return events.APIGatewayProxyResponse{Body: `{"error": "Something went wrong while searching for books"}`, StatusCode: 500}, nil
 	}
 
 	for _, book := range scrappedBooks {
 		if err = book.StoreOrRetrieveByTitle(utils.GetDB()); err != nil {
-			return events.APIGatewayProxyResponse{Body: "Something went wrong while storing scrapped books", StatusCode: 500}, nil
+			return events.APIGatewayProxyResponse{Body: `{"error": Something went wrong while storing scrapped books"}`, StatusCode: 500}, nil
 		}
 	}
 
@@ -62,7 +64,7 @@ func scrapAndStoreBooksThenReturn() (events.APIGatewayProxyResponse, error) {
 func retrieveAllStoredBooks() (events.APIGatewayProxyResponse, error) {
 	storedBooks := model.Books{}
 	if err := storedBooks.GetAll(utils.GetDB()); err != nil {
-		return events.APIGatewayProxyResponse{Body: "Something went wrong while retrieving books from database", StatusCode: 500}, nil
+		return events.APIGatewayProxyResponse{Body: `{"error": "Something went wrong while retrieving books from database"}`, StatusCode: 500}, nil
 	}
 
 	json, _ := json.Marshal(storedBooks)
