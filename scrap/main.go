@@ -30,7 +30,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 }
 
 func scrapBooksAndReturn() (events.APIGatewayProxyResponse, error) {
-	scrappedBooks, err := FindKotlinBooks()
+	scrappedBooks, err := FindKotlinBooks("https://kotlinlang.org/docs/books.html")
 	if err != nil {
 		return events.APIGatewayProxyResponse{Body: "Something went wrong while searching for books", StatusCode: 500}, nil
 	}
@@ -45,7 +45,7 @@ func scrapBooksAndReturn() (events.APIGatewayProxyResponse, error) {
 }
 
 func scrapAndStoreBooksThenReturn() (events.APIGatewayProxyResponse, error) {
-	scrappedBooks, err := FindKotlinBooks()
+	scrappedBooks, err := FindKotlinBooks("https://kotlinlang.org/docs/books.html")
 	if err != nil {
 		return events.APIGatewayProxyResponse{Body: "Something went wrong while searching for books", StatusCode: 500}, nil
 	}

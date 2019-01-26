@@ -31,8 +31,8 @@ functions:
       - http:
           path: book/{id}
           method: get
-  crawl:
-    handler: bin/crawl
+  scrap:
+    handler: bin/scrap
     events:
       - http:
           path: books

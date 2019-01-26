@@ -11,18 +11,18 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func scrapBooksElements(booksIndex string) (booksElements [][]*colly.HTMLElement, crawlingError error) {
+func scrapBooksElements(booksIndex string) (booksElements [][]*colly.HTMLElement, scrapingError error) {
 	booksElements = make([][]*colly.HTMLElement, 0)
 
 	c := colly.NewCollector()
 
 	c.OnError(func(_ *colly.Response, err error) {
-		crawlingError = err
+		scrapingError = err
 	})
 
+	var currentBookElements []*colly.HTMLElement
 	c.OnHTML("article", func(article *colly.HTMLElement) {
 		// Article is the parent for all books
-		var currentBookElements []*colly.HTMLElement
 		// This will find all children elements of article
 		article.ForEach("*", func(index int, element *colly.HTMLElement) {
 			if element.Name == "h2" {
@@ -35,25 +35,27 @@ func scrapBooksElements(booksIndex string) (booksElements [][]*colly.HTMLElement
 			}
 			currentBookElements = append(currentBookElements, element)
 		})
+
+		if len(currentBookElements) > 0 {
+			booksElements = append(booksElements, currentBookElements)
+		}
 	})
 
 	c.Visit(booksIndex)
 	c.Wait()
 
-	if crawlingError != nil {
-		return nil, crawlingError
+	if scrapingError != nil {
+		return nil, scrapingError
 	}
 
 	return booksElements, nil
 }
 
-func scrapISBN(link string) (isbn string, crawlingError error) {
-	isbn = "Unavailable"
-
+func scrapISBN(link string) (isbn string, scrapingError error) {
 	c := colly.NewCollector()
 
 	c.OnError(func(_ *colly.Response, err error) {
-		crawlingError = err
+		scrapingError = err
 	})
 
 	// How to stop OnHTML once I've found the ISBN? Is there a way to get ONLY the whole HTML?
@@ -69,6 +71,8 @@ func scrapISBN(link string) (isbn string, crawlingError error) {
 				isbn = element.Text[indexOf : indexOf+26]
 				isbn = strings.Replace(isbn, "-", "", -1)
 				isbn = isbn[0:13]
+			} else {
+				isbn = "Unavailable"
 			}
 		}
 	})
@@ -79,7 +83,7 @@ func scrapISBN(link string) (isbn string, crawlingError error) {
 	return
 }
 
-func scrapBooksISBNs(booksElements [][]*colly.HTMLElement) (booksISBNs []string, crawlingError error) {
+func scrapBooksISBNs(booksElements [][]*colly.HTMLElement) (booksISBNs []string, scrapingError error) {
 	// We already know the len and cap of this by len(booksElements)
 	booksISBNs = make([]string, 0)
 
@@ -95,9 +99,9 @@ func scrapBooksISBNs(booksElements [][]*colly.HTMLElement) (booksISBNs []string,
 		}
 
 		if isbnLink != "" {
-			isbn, crawlingError = scrapISBN(isbnLink)
-			if crawlingError != nil {
-				return nil, crawlingError
+			isbn, scrapingError = scrapISBN(isbnLink)
+			if scrapingError != nil {
+				return nil, scrapingError
 			}
 		}
 
@@ -143,11 +147,9 @@ func combineBooksElementsAndISBNsIntoBooks(booksElements [][]*colly.HTMLElement,
 	return
 }
 
-// FindKotlinBooks crawls and scraps Kotlin website's books section searching for new books for our library
-func FindKotlinBooks() ([]model.Book, error) {
-	var booksIndex = "https://kotlinlang.org/docs/books.html"
-
-	scrappedBooks, err := scrapBooksElements(booksIndex)
+// FindKotlinBooks scraps and scraps Kotlin website's books section searching for new books for our library
+func FindKotlinBooks(kotlinBooksURL string) ([]model.Book, error) {
+	scrappedBooks, err := scrapBooksElements(kotlinBooksURL)
 	if err != nil {
 		return nil, err
 	}
