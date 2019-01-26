@@ -22,3 +22,6 @@ vendor
 
 # serverless environment config
 serverless.env.yml
+
+.DS_Store
+
