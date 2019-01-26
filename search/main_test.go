@@ -14,8 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: handler failed to marshall book ?
-
 func TestSearchHandlerFindsBook(t *testing.T) {
 	request := events.APIGatewayProxyRequest{}
 	request.PathParameters = make(map[string]string)

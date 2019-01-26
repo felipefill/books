@@ -22,15 +22,11 @@ func scrapBooksElements(booksIndex string) (booksElements [][]*colly.HTMLElement
 
 	var currentBookElements []*colly.HTMLElement
 	c.OnHTML("article", func(article *colly.HTMLElement) {
-		// Article is the parent for all books
-		// This will find all children elements of article
 		article.ForEach("*", func(index int, element *colly.HTMLElement) {
 			if element.Name == "h2" {
 				if len(currentBookElements) > 0 {
-					// Means we already have collected elements for the first book
 					booksElements = append(booksElements, currentBookElements)
 				}
-				// Found new book
 				currentBookElements = make([]*colly.HTMLElement, 0)
 			}
 			currentBookElements = append(currentBookElements, element)
@@ -58,8 +54,9 @@ func scrapISBN(link string) (isbn string, scrapingError error) {
 		scrapingError = err
 	})
 
-	// How to stop OnHTML once I've found the ISBN? Is there a way to get ONLY the whole HTML?
 	c.OnHTML("body", func(element *colly.HTMLElement) {
+		// Some pages will show ISBN with some hyphens
+		// That's why I've chosen the magic number 26, so that I'm sure to get the whole ISBN
 		indexOf := strings.Index(element.Text, "978")
 		if indexOf != -1 {
 			isbn = element.Text[indexOf : indexOf+26]
@@ -84,7 +81,6 @@ func scrapISBN(link string) (isbn string, scrapingError error) {
 }
 
 func scrapBooksISBNs(booksElements [][]*colly.HTMLElement) (booksISBNs []string, scrapingError error) {
-	// We already know the len and cap of this by len(booksElements)
 	booksISBNs = make([]string, 0)
 
 	for _, currentBookElements := range booksElements {
@@ -136,6 +132,7 @@ func combineBooksElementsAndISBNsIntoBooks(booksElements [][]*colly.HTMLElement,
 		}
 
 		bookDescription = strings.TrimSpace(bookDescription)
+		// This will remove extra spaces
 		bookDescription = regexp.MustCompile(`[\s\p{Zs}]{2,}`).ReplaceAllString(bookDescription, " ")
 
 		currentBook.Description = bookDescription
